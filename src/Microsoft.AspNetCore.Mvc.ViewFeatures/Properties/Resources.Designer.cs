@@ -822,6 +822,20 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures
         internal static string FormatTempDataProperties_PublicGetterSetter(object p0, object p1, object p2)
             => string.Format(CultureInfo.CurrentCulture, GetString("TempDataProperties_PublicGetterSetter"), p0, p1, p2);
 
+        /// <summary>
+        /// Unsupported enum value '{0}'.
+        /// </summary>
+        internal static string UnsupportedEnumType
+        {
+            get => GetString("UnsupportedEnumType");
+        }
+
+        /// <summary>
+        /// Unsupported enum value '{0}'.
+        /// </summary>
+        internal static string FormatUnsupportedEnumType(object p0)
+            => string.Format(CultureInfo.CurrentCulture, GetString("UnsupportedEnumType"), p0);
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

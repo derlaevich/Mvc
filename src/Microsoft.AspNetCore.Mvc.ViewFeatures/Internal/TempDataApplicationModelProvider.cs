@@ -28,7 +28,7 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures.Internal
 
             foreach (var controllerModel in context.Result.Controllers)
             {
-                var factory = new ControllerSaveTempDataPropertyFilterFactory();
+                var factory = new ControllerPropertyLifetimeFilterFactory();
                 controllerModel.Filters.Add(factory);
             }
         }

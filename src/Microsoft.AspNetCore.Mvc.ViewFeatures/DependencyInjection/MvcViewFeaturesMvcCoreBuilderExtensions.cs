@@ -204,7 +204,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddSingleton<SaveTempDataFilter>();
 
 
-            services.TryAddTransient<ControllerSaveTempDataPropertyFilter>();
+            services.TryAddTransient<ControllerPropertyLifetimeFilter>();
 
             // This does caching so it should stay singleton
             services.TryAddSingleton<ITempDataProvider, CookieTempDataProvider>();
@@ -220,7 +220,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddSingleton(ArrayPool<ViewBufferValue>.Shared);
             services.TryAddScoped<IViewBufferScope, MemoryPoolViewBufferScope>();
 
-            services.TryAddScoped<IPropertyLifetimeThingie, PropertyLifetimeManager>();
+            services.TryAddScoped<IPropertyLifetimeThingie, PropertyLifetimeThingie>();
         }
     }
 }

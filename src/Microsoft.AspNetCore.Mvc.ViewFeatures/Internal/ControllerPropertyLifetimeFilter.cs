@@ -6,32 +6,34 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Microsoft.AspNetCore.Mvc.ViewFeatures.Internal
 {
-    public class ControllerSaveTempDataPropertyFilter : SaveTempDataPropertyFilterBase, IActionFilter, IResultFilter
+    internal class ControllerPropertyLifetimeFilter : IActionFilter, IResultFilter
     {
         private readonly IPropertyLifetimeThingie _lifetimeThingie;
         private readonly IModelMetadataProvider _modelMetadataProvider;
+        private readonly ITempDataDictionaryFactory _tempDataFactory;
+        private readonly ControllerViewDataDictionaryFactory _viewDataFactory;
 
-        public ControllerSaveTempDataPropertyFilter(IModelMetadataProvider modelMetadataProvider, IPropertyLifetimeThingie lifetimeThingie, ITempDataDictionaryFactory factory)
-            : base(factory)
+        public ControllerPropertyLifetimeFilter(
+            IPropertyLifetimeThingie lifetimeThingie, 
+            ITempDataDictionaryFactory tempDataFactory, 
+            ControllerViewDataDictionaryFactory viewDataFactory)
         {
-            _modelMetadataProvider = modelMetadataProvider;
             _lifetimeThingie = lifetimeThingie;
+            _tempDataFactory = tempDataFactory;
+            _viewDataFactory = viewDataFactory;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
         }
 
-        /// <inheritdoc />
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var tempData = _factory.GetTempData(context.HttpContext);
-            var viewData = context.HttpContext.Items[ViewDataDictionaryControllerPropertyActivator.ViewDataKey] as ViewDataDictionary ??
-                new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
+            var tempData = _tempDataFactory.GetTempData(context.HttpContext);
+            var viewData = _viewDataFactory.GetViewDataDictionary(context);
 
             var lifeTimeContext = new PropertyLifetimeContext(tempData, viewData);
-            _lifetimeThingie.Init(context.Controller, lifeTimeContext);
-            // SetPropertyVaules(tempData, Subject);
+            _lifetimeThingie.Populate(context.Controller, lifeTimeContext);
         }
 
         public void OnResultExecuted(ResultExecutedContext context)
@@ -41,12 +43,10 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures.Internal
 
         public void OnResultExecuting(ResultExecutingContext context)
         {
-            var tempData = _factory.GetTempData(context.HttpContext);
-            var viewData = context.HttpContext.Items[ViewDataDictionaryControllerPropertyActivator.ViewDataKey] as ViewDataDictionary ??
-                new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
+            var tempData = _tempDataFactory.GetTempData(context.HttpContext);
+            var viewData = _viewDataFactory.GetViewDataDictionary(context);
 
             var lifeTimeContext = new PropertyLifetimeContext(tempData, viewData);
-
             _lifetimeThingie.Save(context.Controller, lifeTimeContext);
         }
     }

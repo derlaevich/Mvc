@@ -86,7 +86,7 @@ namespace Microsoft.AspNetCore.Mvc.ViewComponents
             var component = _viewComponentFactory.CreateViewComponent(context);
             var lifetimeContext = new PropertyLifetimeContext(context.TempData, context.ViewData);
 
-            _propertyLifetimeThingie.Init(component, lifetimeContext);
+            _propertyLifetimeThingie.Populate(component, lifetimeContext);
 
             IViewComponentResult result;
             if (executor.IsMethodAsync)

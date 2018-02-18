@@ -102,7 +102,7 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures.Internal
             Assert.Equal(0, controller.Test2);
         }
 
-        private ControllerSaveTempDataPropertyFilter CreateControllerSaveTempDataPropertyFilter(
+        private ControllerPropertyLifetimeFilter CreateControllerSaveTempDataPropertyFilter(
             HttpContext httpContext,
             TempDataDictionary tempData)
         {
@@ -111,7 +111,7 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures.Internal
                 .Setup(f => f.GetTempData(httpContext))
                 .Returns(tempData);
 
-            return new ControllerSaveTempDataPropertyFilter(factory.Object);
+            return new ControllerPropertyLifetimeFilter(factory.Object);
         }
 
         public class TestController : Controller
